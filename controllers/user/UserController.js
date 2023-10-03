@@ -13,6 +13,19 @@ export const getProfile = async (req, res, next) => {
     }
 }
 
+export const getAllUsers = async (req, res, next) => {
+
+    try {
+        const prisma = await getPrismaInstance();
+        const user = await prisma.user.findMany();
+
+        return res.json(user);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
 
 
 export const updateProfile = async (req, res, next) => {
@@ -29,6 +42,5 @@ export const updateProfile = async (req, res, next) => {
         console.log(error);
         next(error);
     }
-
 
 }

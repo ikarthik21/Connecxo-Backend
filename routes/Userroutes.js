@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { getProfile, updateProfile } from '../controllers/user/UserController.js';
+import { getProfile, updateProfile, getAllUsers } from '../controllers/user/UserController.js';
 
 const userRoutes = Router();
-
+   
 userRoutes.get('/profile/:userId', getProfile);
+userRoutes.get('/all', getAllUsers);
 
 userRoutes.patch('/profile/update', updateProfile);
 
