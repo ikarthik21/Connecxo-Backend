@@ -14,7 +14,7 @@ export const getProfile = async (req, res, next) => {
 }
 
 export const getAllUsers = async (req, res, next) => {
-
+    
     try {
         const prisma = await getPrismaInstance();
         const user = await prisma.user.findMany();

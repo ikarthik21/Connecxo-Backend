@@ -1,4 +1,3 @@
- 
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,9 +8,23 @@ datasource db {
 }
 
 model User {
-  id           String @id
-  email        String @unique
-  display_name String @default("")
-  about        String @default("")
-  profileImg   String @default("")
+  id               String     @id
+  email            String     @unique
+  display_name     String     @default("")
+  about            String     @default("")
+  profileImg       String     @default("")
+  sentMessages     Messages[] @relation("sentMessages")
+  receivedMessages Messages[] @relation("receivedMessages")
+}
+
+model Messages {
+  id            Int      @id @default(autoincrement())
+  senderId      String
+  receiverId    String
+  receiver      User     @relation("receivedMessages", fields: [receiverId], references: [id])
+  sender        User     @relation("sentMessages", fields: [senderId], references: [id])
+  type          String   @default("text")
+  message       String
+  messageStatus String   @default("sent")
+  createdAt     DateTime @default(now())
 }
