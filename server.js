@@ -4,7 +4,7 @@ import cors from 'cors';
 import authRoutes from './routes/Authroutes.js';
 import userRoutes from './routes/Userroutes.js';
 import messageRoutes from './routes/messageRoutes.js';
-
+import { Server } from 'socket.io';
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3100;
@@ -17,9 +17,42 @@ app.use('/api/message', messageRoutes);
 app.use('/user', userRoutes);
 
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`server is listening on port ${port}`);
 });
 
 
+const io = new Server(server, {
+    cors: {
+        origin: process.env.FRONTEND_URL
+    }
+})
+
 global.onlineUsers = new Map();
+
+io.on('connection', socket => {
+    global.chatSocket = socket;
+    socket.on('add-user', (userId) => {
+        onlineUsers.set(userId, socket.id)
+    });
+
+    socket.on('send-msg', (data) => {
+        const sendUserSocket = onlineUsers.get(data.to);
+        if (sendUserSocket) {
+            const now = new Date();
+            const formattedDate = now.toISOString();
+            const sendData = {
+                senderId: data.from,
+                receiverId: data.to,
+                type: "text",
+                message: data.message,
+                messageStatus: "delivered",
+                createdAt: formattedDate
+            }
+            
+            socket.to(sendUserSocket).emit('msg-receive', sendData)
+        }
+    })
+})
+
+
