@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/Authroutes.js';
 import userRoutes from './routes/Userroutes.js';
-import messageRoutes from './routes/messageRoutes.js';
+import messageRoutes from './routes/Messageroutes.js';
 import { Server } from 'socket.io';
 dotenv.config();
 const app = express();
