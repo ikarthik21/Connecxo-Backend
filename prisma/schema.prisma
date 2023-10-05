@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:postkarthik@localhost:5432/mydb?schema=sample"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -13,18 +13,18 @@ model User {
   display_name     String     @default("")
   about            String     @default("")
   profileImg       String     @default("")
-  sentMessages     Messages[] @relation("sentMessages")
   receivedMessages Messages[] @relation("receivedMessages")
+  sentMessages     Messages[] @relation("sentMessages")
 }
 
 model Messages {
   id            Int      @id @default(autoincrement())
   senderId      String
   receiverId    String
-  receiver      User     @relation("receivedMessages", fields: [receiverId], references: [id])
-  sender        User     @relation("sentMessages", fields: [senderId], references: [id])
   type          String   @default("text")
   message       String
   messageStatus String   @default("sent")
   createdAt     DateTime @default(now())
+  receiver      User     @relation("receivedMessages", fields: [receiverId], references: [id])
+  sender        User     @relation("sentMessages", fields: [senderId], references: [id])
 }
