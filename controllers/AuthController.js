@@ -12,7 +12,7 @@ export const userValidate = async (req, res, next) => {
 
     try {
 
-        const { email } = req.body;
+        const { email, name } = req.body;
 
         if (!email) {
             return res.json({ message: "Email is required" }, { status: false })
@@ -29,6 +29,8 @@ export const userValidate = async (req, res, next) => {
                 data: {
                     id: id,
                     email: email,
+                    display_name: name,
+                    profileImg: "/images/user.jpg"
                 },
             });
 
