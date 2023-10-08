@@ -2,7 +2,7 @@ import { getPrismaInstance } from '../utils/PrismaUtils.js';
 
 export const addMessage = async (req, res, next) => {
     try {
-        const { message, from, to } = req.body;
+        const { message, from, to, type } = req.body;
         const prisma = getPrismaInstance();
         const getUser = onlineUsers.get(to);
         if (message && from && to) {
@@ -11,6 +11,7 @@ export const addMessage = async (req, res, next) => {
                     message,
                     sender: { connect: { id: from } },
                     receiver: { connect: { id: to } },
+                    type,
                     messageStatus: getUser ? "delivered" : "sent"
                 },
                 include: { sender: true, receiver: true }
@@ -65,8 +66,8 @@ export const getMessages = async (req, res, next) => {
                 unreadMessages.push(message.id);
             }
         });
-        
-       
+
+
         await prisma.messages.updateMany({
             where: {
                 id: { in: unreadMessages }
