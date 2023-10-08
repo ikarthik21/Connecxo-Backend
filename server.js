@@ -44,7 +44,7 @@ io.on('connection', socket => {
             const sendData = {
                 senderId: data.from,
                 receiverId: data.to,
-                type: "text",
+                type: data.type,
                 message: data.message,
                 messageStatus: "delivered",
                 createdAt: formattedDate
