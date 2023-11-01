@@ -117,16 +117,14 @@ export const getInitialMessages = async (req, res, next) => {
         const users = new Map();
         const msgStatuschange = [];
 
+
         messages.forEach((msg) => {
-
-
-
 
             const isSender = msg.senderId === userId;
             const calcId = isSender ? msg.receiverId : msg.senderId;
 
             if (msg.messageStatus === "sent") {
-                msgStatuschange.push(message.id);
+                msgStatuschange.push(msg.id);
             }
 
             if (!users.get(calcId)) {
@@ -154,7 +152,7 @@ export const getInitialMessages = async (req, res, next) => {
             else if (msg.messageStatus !== "read" && !isSender) {
                 const user = users.get(calcId);
                 users.set(calcId, {
-                    ...user, totalUnreadMessages: totalUnreadMessages + 1
+                    ...user, totalUnreadMessages: user.totalUnreadMessages + 1
                 })
             }
 
