@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3100;
 
-    
+
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
@@ -49,10 +49,33 @@ io.on('connection', socket => {
                 messageStatus: "delivered",
                 createdAt: formattedDate
             }
-            
+
             socket.to(sendUserSocket).emit('msg-receive', sendData)
         }
     })
+
+    socket.on('init-call', (data) => {
+        const sendUserSocket = onlineUsers.get(data.to);
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit('receive-call', data)
+        }
+    })
+
+    socket.on('end-call', (data) => {
+        const sendUserSocket = onlineUsers.get(data.to);
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit('close-call', data)
+        }
+    })
+
+    socket.on('cancel-call', (data) => {
+        const sendUserSocket = onlineUsers.get(data.to);
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit('close-incoming-call', data)
+        }
+    })
+
+
 })
 
 
