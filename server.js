@@ -15,7 +15,9 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/user', userRoutes);
-
+app.get('/', (req, res) => {
+    res.end("<h1>Welcome  to Connecxo Backend</h1>")
+})
 
 const server = app.listen(port, () => {
     console.log(`server is listening on port ${port}`);
@@ -79,7 +81,7 @@ io.on('connection', socket => {
 })
 
 
-const keepAliveInterval =10* 60 * 1000;  
+const keepAliveInterval = 10 * 60 * 1000;
 setInterval(() => {
     console.log('Server is alive and well!');
 }, keepAliveInterval);
