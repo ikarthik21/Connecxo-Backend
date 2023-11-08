@@ -79,3 +79,7 @@ io.on('connection', socket => {
 })
 
 
+const keepAliveInterval = 5 * 60 * 1000; 
+setInterval(() => {
+    console.log('Server is alive and well!');
+}, keepAliveInterval);
