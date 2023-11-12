@@ -1,6 +1,9 @@
 import { getPrismaInstance } from '../utils/PrismaUtils.js';
 import crypto from 'crypto';
-
+import { generateToken04 } from '../utils/TokenUtils.js';
+import dotenv from 'dotenv';
+import { log } from 'console';
+dotenv.config();
 
 function generateId() {
     const randomBytes = crypto.randomBytes(16);
@@ -61,6 +64,30 @@ export const getUserId = async (req, res, next) => {
 
         return res.json({ message: 'No User Found' });
 
+    }
+    catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+
+
+export const generateToken = (req, res, next) => {
+    try {
+
+        const appId = parseInt(process.env.ZEGO_APP_ID);
+        const serverSecret = process.env.ZEGO_SERVER_SECRET;
+        const time = 3600;
+        const payload = "";
+        const userId = req.params.userId.toString();
+
+        if (appId && serverSecret && userId) {
+            const token = generateToken04(appId, userId, serverSecret, time, payload);
+            res.status(200).json({ token });
+        }
+
+        // res.status(400).send("UserId , AppId are required");
     }
     catch (error) {
         console.log(error);

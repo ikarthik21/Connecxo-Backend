@@ -70,14 +70,13 @@ io.on('connection', socket => {
         }
     })
 
+    // cancel call by self by user
     socket.on('cancel-call', (data) => {
         const sendUserSocket = onlineUsers.get(data.to);
         if (sendUserSocket) {
             socket.to(sendUserSocket).emit('close-incoming-call', data)
         }
     })
-
-
 })
 
 
